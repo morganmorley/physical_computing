@@ -10,4 +10,5 @@ There is is also one ouput inside the box, an LED. When the LED is lit, the phot
 serial monitor. This LED-photocell interaction is the stand in for the polygraph.
 
 When an active pulse is not read by the pulse sensor and no switches are active, the LED is off. When switch one is active, the
-LED lights up. When switch two is active, the LED is off even if a pulse is read. Both switches should not be active at once.
+LED lights up. When switch two is active, the LED is off even if a pulse is read. If both switches are active at once, the 
+LED is off.
