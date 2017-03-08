@@ -2,7 +2,7 @@
 
 A repo for the work done in Physical Computing.
 
-#Pulse Cheater
+#Pulse Cheater for 8 March 2017
 
 Pulse Cheater was inspired by the idea of cheating a polygraph. In this simplification, a breadboard is taped within a
 light-tight box. Three inputs exist outside the box: two switches and a pulse reader. One input is inside the box, a photocell.
