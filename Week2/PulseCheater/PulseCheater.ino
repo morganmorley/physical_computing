@@ -1,19 +1,23 @@
 /*
-  AnalogReadSerial
-  Reads an analog input on pin 0, prints the result to the serial monitor.
+  PulseCheater
+  Reads two analog inputs (pins 0 and 6) and two digital inputs (pins 3 and 4), prints the result 
+  of the photocell to the serial monitor. Powers one digital output in the form of an LED (pin 13).
   Graphical representation is available using serial plotter (Tools > Serial Plotter menu)
-  Attach the center pin of a potentiometer to pin A0, and the outside pins to +5V and ground.
 
-  This example code is in the public domain.
+  by Morgan Morley Mills
+  created 8 March 2017
 */
 
+//Pins:
 int LEDPin = 13;
 int pulsePin = 0;
 int switchPin_1 = 3;
 int switchPin_2 = 4;
 int photoPin = 6;
+//Pulse Data:
 float pulseHistory[20] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 float pulse = 0;
+//Misc:
 int repeatCount = 19;
 int switchValue_1 = 0;
 int switchValue_2 = 0; 
@@ -31,8 +35,9 @@ void loop()
   // read the input on digital pins 3 and 4:
   switchValue_1 = digitalRead(switchPin_1);
   switchValue_2 = digitalRead(switchPin_2);
+  // read the input on analog pin 0:
   sensePulse();
-  int light = analogRead(photoPin);
+  // turn on the LED according to your pulse and the switches.
   bool isOn = false;
   if (pulse > 0) {
     if (switchValue_1 > 0 && pulseHistory[repeatCount] > 0) {
@@ -41,7 +46,6 @@ void loop()
       if (switchValue_2 > 0) {
         goto switches;
       } else {
-        Serial.println("pulse");
         digitalWrite(LEDPin, HIGH);
         isOn = true;
       }
@@ -49,11 +53,9 @@ void loop()
   }
   switches:
   if (switchValue_2 > 0 && pulse == 0) {
-    Serial.println("switch two");
     digitalWrite(LEDPin, LOW);
   } else {
     if (switchValue_1 > 0 && pulseHistory[repeatCount] > 0) {
-      Serial.println("switch one");
       digitalWrite(LEDPin, HIGH);
       isOn = true;
       if (repeatCount == 0) {
@@ -64,16 +66,20 @@ void loop()
     }
   }
   if (isOn == false) {
-    Serial.println("off");
     digitalWrite(LEDPin, LOW);
   }
+  // read the input on analog pin 6:
+  int light = analogRead(photoPin);
+  // print the light reading to the serial monitor:
   Serial.println(light);
   delay(1);        // delay in between reads for stability
 }
 
 void sensePulse() 
 {
+  // read the input on analog pin 0:
   float pulseValue = analogRead(pulsePin);
+  // determines if there is an active pulse:
   if (pulseValue > 250) {
     int i;
     float pulseSum = 0;
@@ -82,11 +88,13 @@ void sensePulse()
       pulseHistory[i] = pulseHistory[i-1];
     }
     pulseHistory[0] = pulseValue;
-    pulseSum = pulseSum + pulseHistory[0];
+    pulseSum = pulseSum + pulseValue;
+    // if the pulse is in active peak, changes pulse variable for LED power
     float baseline = (pulseSum / 20) + 1;
     if (pulseValue > baseline) {
       pulse = pulseValue;
     } else {
+      // no LED power
       pulse = 0;
     }
   } else {
