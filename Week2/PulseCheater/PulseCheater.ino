@@ -40,29 +40,20 @@ void loop()
   // turn on the LED according to your pulse and the switches.
   bool isOn = false;
   if (pulse > 0) {
-    if (switchValue_1 > 0 && pulseHistory[repeatCount] > 0) {
+    if (switchValue_1 > 0 || switchValue_2 > 0) {
       goto switches;
     } else {
-      if (switchValue_2 > 0) {
-        goto switches;
-      } else {
-        digitalWrite(LEDPin, HIGH);
-        isOn = true;
-      }
+      digitalWrite(LEDPin, HIGH);
+      isOn = true;
     }
   }
   switches:
-  if (switchValue_2 > 0 && pulse == 0) {
+  if (switchValue_2 > 0) {
     digitalWrite(LEDPin, LOW);
   } else {
-    if (switchValue_1 > 0 && pulseHistory[repeatCount] > 0) {
+    if (switchValue_1 > 0) {
       digitalWrite(LEDPin, HIGH);
       isOn = true;
-      if (repeatCount == 0) {
-        repeatCount = 19;
-      } else {
-        repeatCount = repeatCount - 1;
-      }
     }
   }
   if (isOn == false) {
